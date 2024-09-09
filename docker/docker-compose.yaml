@@ -33,6 +33,13 @@ networks:
       config:
         - subnet: 172.10.0.0/16
 services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8888:8080
   mysql:
     build: ./mysql
     volumes:
@@ -208,6 +215,8 @@ services:
   feature-server:
     image: jambonz/feature-server:latest
     restart: always
+    ports:
+      - "3005:3000"
     volumes:
       - ./credentials:/opt/credentials
       - ./tmpAudio:/tmp
@@ -219,7 +228,7 @@ services:
       HTTP_PORT: 3000
       JAMBONES_SBCS: 172.10.0.10
       JAMBONES_FEATURE_SERVERS: 172.10.0.50:9022:cymru
-      JAMBONES_FREESWITCH: 172.10.0.51:8021:JambonzR0ck$
+      JAMBONES_FREESWITCH: 172.10.0.51:8021:JambonzR0ck$$
     depends_on:
       - mysql
       - redis
@@ -232,6 +241,42 @@ services:
       jambonz:
         ipv4_address: 172.10.0.60
 
+  sbc-sip-sidecar:
+    image: jambonz/sbc-sip-sidecar:latest
+    restart: always
+    environment:
+      <<: *common-variables
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/credentials/gcp.json
+      DRACHTIO_HOST: 172.10.0.10
+      #DRACHTIO_PORT: 9022
+      #DRACHTIO_SECRET:
+      #JAMBONES_LOGLEVEL:
+      #JAMBONES_MYSQL_HOST:
+      #JAMBONES_MYSQL_USER:
+      #JAMBONES_MYSQL_PASSWORD: 
+      #JAMBONES_MYSQL_DATABASE :
+      #JAMBONES_MYSQL_PORT:
+      #JAMBONES_MYSQL_CONNECTION_LIMIT:
+      #JAMBONES_CLUSTER_ID :
+      #JAMBONES_REDIS_HOST :
+      #JAMBONES_REDIS_PORT :
+      #JAMBONES_TIME_SERIES_HOST :
+      #CHECK_EXPIRES_INTERVAL:
+      #EXPIRES_INTERVAL :
+      #JWT_SECRET: 
+    depends_on:
+      - mysql
+      - redis
+      - sbc-inbound
+      - sbc-outbound
+      - api-server
+      - drachtio-fs
+      - freeswitch
+      - feature-server
+    networks:
+      jambonz:
+        ipv4_address: 172.10.0.80
+
   influxdb:
     image: influxdb:1.8
     ports:
@@ -239,3 +284,4 @@ services:
     networks:
       jambonz:
         ipv4_address: 172.10.0.61
+
