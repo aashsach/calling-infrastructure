@@ -109,17 +109,17 @@ services:
       jambonz:
         ipv4_address: 172.10.0.30
 
-  webapp:
-    build: ./jambonz-webapp
-    networks:
-      jambonz:
-        ipv4_address: 172.10.0.31
-    ports:
-      - "3001:3001"
-    environment:
-      API_BASE_URL: http://${HOST_IP}:3000/v1
-    depends_on:
-      - api-server
+  # webapp:
+  #   build: ./jambonz-webapp
+  #   networks:
+  #     jambonz:
+  #       ipv4_address: 172.10.0.31
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     API_BASE_URL: http://${HOST_IP}:3000/v1
+  #   depends_on:
+  #     - api-server
 
   registrar:
     image: jambonz/sbc-registrar:latest
