@@ -1,3 +1,6 @@
 [submodule "docker/jambonz-webapp"]
 	path = docker/jambonz-webapp
 	url = https://github.com/jambonz/jambonz-webapp.git
+[submodule "docker/jambonz-api-server"]
+	path = docker/jambonz-api-server
+	url = https://github.com/usUpal/jambonz-api-server

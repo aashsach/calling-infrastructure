@@ -1,36 +1,23 @@
 version: "3.9"
 
-# common env var settings
-# not all containers use all of these env vars, but they are common
-# enough it's much simpler to track them in one place
 x-common-variables: &common-variables
-  JAMBONES_MYSQL_HOST: 172.10.0.2
+  JAMBONES_MYSQL_HOST: mysql
   JAMBONES_MYSQL_USER: jambones
   JAMBONES_MYSQL_PASSWORD: jambones
   JAMBONES_MYSQL_DATABASE: jambones
-  # different servers require these env vars a little differently, but
-  # probably at least the first two can be consolidated soon
   JWT_SECRET: "5a3e38b5-3188-4936-89c9-fb0df3138b5c"
   ENCRYPTION_SECRET: "5a3e38b5-3188-4936-89c9-fb0df3138b5c"
   AUTHENTICATION_KEY: "5a3e38b5-3188-4936-89c9-fb0df3138b5c"
   NODE_ENV: production
-  JAMBONES_TIME_SERIES_HOST: 172.10.0.61
+  JAMBONES_TIME_SERIES_HOST: influxdb
   ENABLE_METRICS: 0
   JAMBONES_CLUSTER_ID: jb
-  JAMBONES_REDIS_HOST: 172.10.0.3
+  JAMBONES_REDIS_HOST: redis
   JAMBONES_REDIS_PORT: 6379
   JAMBONES_LOGLEVEL: info
-  # note that DRACHTIO_HOST is different for the feature server,
-  # so we set it explicitly on the containers that need it
   DRACHTIO_PORT: 9022
   DRACHTIO_SECRET: cymru
 
-networks:
-  jambonz:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.10.0.0/16
 services:
   dozzle:
     container_name: dozzle
@@ -39,6 +26,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8888:8080
+
   mysql:
     build: ./mysql
     volumes:
@@ -52,20 +40,14 @@ services:
       MYSQL_PASSWORD: "jambones"
     healthcheck:
       test:
-        ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--protocol", "tcp"]
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "--protocol", "tcp"]
       timeout: 5s
       retries: 10
-    networks:
-      jambonz:
-        ipv4_address: 172.10.0.2
-  
+
   redis:
     image: redis:alpine
     ports:
-      - "16379:6379/tcp"
-    networks:
-      jambonz:
-        ipv4_address: 172.10.0.3
+      - "16379:6379"
 
   api-server:
     image: jambonz/api-server:latest
@@ -80,10 +62,21 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-    networks:
-      jambonz:
-        ipv4_address: 172.10.0.30
 
-
-
-  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ""
+    depends_on:
+      - mysql
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - "8086:8086"
+networks:
+  default:
+    driver: bridge

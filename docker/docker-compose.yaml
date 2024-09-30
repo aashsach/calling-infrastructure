@@ -10,9 +10,9 @@ x-common-variables: &common-variables
   JAMBONES_MYSQL_DATABASE: jambones
   # different servers require these env vars a little differently, but
   # probably at least the first two can be consolidated soon
-  JWT_SECRET: '5a3e38b5-3188-4936-89c9-fb0df3138b5c'
-  ENCRYPTION_SECRET: '5a3e38b5-3188-4936-89c9-fb0df3138b5c'
-  AUTHENTICATION_KEY: '5a3e38b5-3188-4936-89c9-fb0df3138b5c'
+  JWT_SECRET: "5a3e38b5-3188-4936-89c9-fb0df3138b5c"
+  ENCRYPTION_SECRET: "5a3e38b5-3188-4936-89c9-fb0df3138b5c"
+  AUTHENTICATION_KEY: "5a3e38b5-3188-4936-89c9-fb0df3138b5c"
   NODE_ENV: production
   JAMBONES_TIME_SERIES_HOST: 172.10.0.61
   ENABLE_METRICS: 0
@@ -24,7 +24,6 @@ x-common-variables: &common-variables
   # so we set it explicitly on the containers that need it
   DRACHTIO_PORT: 9022
   DRACHTIO_SECRET: cymru
-
 
 networks:
   jambonz:
@@ -52,7 +51,8 @@ services:
       MYSQL_USER: "jambones"
       MYSQL_PASSWORD: "jambones"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "127.0.0.1", "--protocol", "tcp"]
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--protocol", "tcp"]
       timeout: 5s
       retries: 10
     networks:
@@ -70,7 +70,19 @@ services:
   drachtio-sbc:
     image: drachtio/drachtio-server:latest
     restart: always
-    command: ["drachtio", "--contact", "sip:172.10.0.10;transport=udp,tcp",  "--external-ip",  "${HOST_IP}", "--address", "0.0.0.0", "--port", "9022", "--disable-nat-detection"]
+    command:
+      [
+        "drachtio",
+        "--contact",
+        "sip:172.10.0.10;transport=udp,tcp",
+        "--external-ip",
+        "${HOST_IP}",
+        "--address",
+        "0.0.0.0",
+        "--port",
+        "9022",
+        "--disable-nat-detection",
+      ]
     volumes:
       - ./sbc/drachtio.conf.xml:/etc/drachtio.conf.xml
     ports:
@@ -85,15 +97,43 @@ services:
   rtpengine:
     image: drachtio/rtpengine:jambonz-test
     restart: always
-    command: ["rtpengine", "--interface", "private/172.10.0.11", "--interface", "public/172.10.0.11!${HOST_IP}", "--log-level", "5"]
+    command:
+      [
+        "rtpengine",
+        "--interface",
+        "private/172.10.0.11",
+        "--interface",
+        "public/172.10.0.11!${HOST_IP}",
+        "--log-level",
+        "5",
+      ]
     ports:
       - "40000-40100:40000-40100/udp"
     networks:
       jambonz:
         ipv4_address: 172.10.0.11
 
+  # api-server:
+  #   image: jambonz/api-server:latest
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     <<: *common-variables
+  #     HTTP_PORT: 3000
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_started
+  #   networks:
+  #     jambonz:
+  #       ipv4_address: 172.10.0.30
+
   api-server:
-    image: jambonz/api-server:latest
+    build:
+      context: ./jambonz-api-server
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "3000:3000"
@@ -108,7 +148,6 @@ services:
     networks:
       jambonz:
         ipv4_address: 172.10.0.30
-
   # webapp:
   #   build: ./jambonz-webapp
   #   networks:
@@ -163,7 +202,7 @@ services:
       <<: *common-variables
       NODE_ENV: test
       DRACHTIO_HOST: 172.10.0.10
-      JAMBONES_RTPENGINES: '172.10.0.11:22222'
+      JAMBONES_RTPENGINES: "172.10.0.11:22222"
       JAMBONES_NETWORK_CIDR: 172.10.0.0/16
       JAMBONES_FEATURE_SERVERS: 172.10.0.50:5060
     depends_on:
@@ -181,7 +220,7 @@ services:
     environment:
       <<: *common-variables
       DRACHTIO_HOST: 172.10.0.10
-      JAMBONES_RTPENGINES: '172.10.0.11:22222'
+      JAMBONES_RTPENGINES: "172.10.0.11:22222"
       JAMBONES_NETWORK_CIDR: 172.10.0.0/16
     depends_on:
       mysql:
@@ -195,7 +234,18 @@ services:
   drachtio-fs:
     image: drachtio/drachtio-server:latest
     restart: always
-    command: ["drachtio", "--contact", "sip:*;transport=udp", "--contact", "sip:*;transport=tcp", "--address", "0.0.0.0", "--port", "9022"]
+    command:
+      [
+        "drachtio",
+        "--contact",
+        "sip:*;transport=udp",
+        "--contact",
+        "sip:*;transport=tcp",
+        "--address",
+        "0.0.0.0",
+        "--port",
+        "9022",
+      ]
     networks:
       jambonz:
         ipv4_address: 172.10.0.50
@@ -203,7 +253,8 @@ services:
   freeswitch:
     image: drachtio/drachtio-freeswitch-mrf:0.4.27
     restart: always
-    command: ["freeswitch", "--rtp-range-start", "20000", "--rtp-range-end", "20100"]
+    command:
+      ["freeswitch", "--rtp-range-start", "20000", "--rtp-range-end", "20100"]
     ports:
       - "8022:8021/tcp"
     volumes:
@@ -253,7 +304,7 @@ services:
       #JAMBONES_LOGLEVEL:
       #JAMBONES_MYSQL_HOST:
       #JAMBONES_MYSQL_USER:
-      #JAMBONES_MYSQL_PASSWORD: 
+      #JAMBONES_MYSQL_PASSWORD:
       #JAMBONES_MYSQL_DATABASE :
       #JAMBONES_MYSQL_PORT:
       #JAMBONES_MYSQL_CONNECTION_LIMIT:
@@ -263,7 +314,7 @@ services:
       #JAMBONES_TIME_SERIES_HOST :
       #CHECK_EXPIRES_INTERVAL:
       #EXPIRES_INTERVAL :
-      #JWT_SECRET: 
+      #JWT_SECRET:
     depends_on:
       - mysql
       - redis
@@ -277,6 +328,21 @@ services:
       jambonz:
         ipv4_address: 172.10.0.80
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ""
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      jambonz:
+        ipv4_address: 172.10.0.70
+
   influxdb:
     image: influxdb:1.8
     ports:
@@ -284,4 +350,3 @@ services:
     networks:
       jambonz:
         ipv4_address: 172.10.0.61
-

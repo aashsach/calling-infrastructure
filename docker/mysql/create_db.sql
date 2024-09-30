@@ -26,6 +26,8 @@ DROP TABLE IF EXISTS user_permissions;
 
 DROP TABLE IF EXISTS permissions;
 
+DROP TABLE IF EXISTS contacts;
+
 DROP TABLE IF EXISTS predefined_sip_gateways;
 
 DROP TABLE IF EXISTS predefined_smpp_gateways;
@@ -392,6 +394,15 @@ application_sid CHAR(36),
 service_provider_sid CHAR(36) COMMENT 'if not null, this number is a test number for the associated service provider',
 PRIMARY KEY (phone_number_sid)
 ) COMMENT='A phone number that has been assigned to an account';
+
+CREATE TABLE contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255),
+    phone_number VARCHAR(20),
+    address VARCHAR(255),
+    status ENUM('done', 'not yet', 'processing') DEFAULT 'not yet' COMMENT 'status of the contact'
+);
 
 CREATE TABLE sip_gateways
 (
