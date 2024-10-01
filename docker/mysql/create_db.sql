@@ -72,6 +72,37 @@ DROP TABLE IF EXISTS service_providers;
 
 DROP TABLE IF EXISTS webhooks;
 
+
+CREATE TABLE contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255),
+    phone_number VARCHAR(20),
+    address VARCHAR(255),
+    status ENUM('done', 'not yet', 'processing') DEFAULT 'not yet'
+);
+
+INSERT INTO contacts (name, company_name, phone_number, address, status)
+VALUES 
+('Upal', 'Upal LLC', '+8801705933999', '123 Main St, Springfield', 'not yet'),
+('Udyan', 'Udyan INC', '+8801627756625', '456 Oak St, River City', 'done'),
+('Sajib', 'SAJIB PLC', '+8801748920048', '789 Pine St, Mountain View', 'processing'),
+('Srabon', 'Srabon LLC', '+8801827621312', '101 Elm St, Lakeside', 'not yet'),
+('Milon', 'Milon Dev', '+8801784124291', '202 Maple St, Oceanview', 'done'),
+('Alice', 'Alice Corp', '+8801700000000', '301 Oak St, Hilltop', 'not yet'),
+('Bob', 'Bob Enterprises', '+8801700000000', '654 Pine St, Valley', 'done'),
+('Charlie', 'Charlie Ltd', '+8801700000000', '789 Cedar St, Greenfield', 'processing'),
+('David', 'David Inc.', '+8801700000000', '111 Birch St, Lakeside', 'not yet'),
+('Eva', 'Eva LLC', '+8801700000000', '222 Maple St, Riverside', 'done'),
+('Frank', 'Frank Solutions', '+8801700000000', '333 Elm St, Foresttown', 'processing'),
+('Grace', 'Grace Associates', '+8801700000000', '444 Ash St, Woodville', 'not yet'),
+('Hank', 'Hank Co.', '+8801700000000', '555 Spruce St, Meadowland', 'done'),
+('Ivy', 'Ivy Group', '+8801700000000', '666 Willow St, Seaside', 'processing'),
+('Jack', 'Jack Industries', '+8801700000000', '777 Cherry St, Sunnytown', 'not yet');
+
+
+
+
 CREATE TABLE account_static_ips
 (
 account_static_ip_sid CHAR(36) NOT NULL UNIQUE ,
