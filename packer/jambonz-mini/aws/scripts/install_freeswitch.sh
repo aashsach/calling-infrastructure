@@ -63,7 +63,8 @@ git config --global pull.rebase true
 echo done
 git clone https://github.com/signalwire/freeswitch.git -b ${FREESWITCH_VERSION}
 git clone https://github.com/warmcat/libwebsockets.git -b ${LWS_VERSION}
-git clone https://github.com/drachtio/drachtio-freeswitch-modules.git -b ${MODULES_VERSION}
+git clone https://github.com/awaazde/freeswitch_modules.git
+# git clone https://github.com/drachtio/freeswitch_modules.git -b ${MODULES_VERSION}
 git clone https://github.com/grpc/grpc -b master
 cd grpc && git checkout ${GRPC_VERSION} && cd ..
 
@@ -80,21 +81,21 @@ git clone https://github.com/googleapis/googleapis -b master
 cd googleapis && git checkout ${GOOGLE_API_VERSION} && cd ..
 git clone https://github.com/awslabs/aws-c-common.git
 
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_audio_fork /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_aws_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_aws_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_assemblyai_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_assemblyai_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_azure_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_azure_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_aws_lex /usr/local/src/freeswitch/src/mod/applications/mod_aws_lex
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_cobalt_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_cobalt_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_deepgram_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_google_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_google_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_ibm_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_ibm_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_nuance_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nuance_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_nvidia_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nvidia_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_soniox_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_soniox_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_jambonz_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_jambonz_transcribe
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_google_tts /usr/local/src/freeswitch/src/mod/applications/mod_google_tts
-cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_dialogflow /usr/local/src/freeswitch/src/mod/applications/mod_dialogflow
+cp -r /usr/local/src/freeswitch_modules/modules/mod_audio_fork /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork
+cp -r /usr/local/src/freeswitch_modules/modules/mod_aws_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_aws_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_assemblyai_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_assemblyai_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_azure_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_azure_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_aws_lex /usr/local/src/freeswitch/src/mod/applications/mod_aws_lex
+cp -r /usr/local/src/freeswitch_modules/modules/mod_cobalt_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_cobalt_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_deepgram_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_google_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_google_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_ibm_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_ibm_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_nuance_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nuance_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_nvidia_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nvidia_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_soniox_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_soniox_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_jambonz_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_jambonz_transcribe
+cp -r /usr/local/src/freeswitch_modules/modules/mod_google_tts /usr/local/src/freeswitch/src/mod/applications/mod_google_tts
+cp -r /usr/local/src/freeswitch_modules/modules/mod_dialogflow /usr/local/src/freeswitch/src/mod/applications/mod_dialogflow
 
 # copy Makefiles and patches into place
 cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac

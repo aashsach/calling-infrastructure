@@ -18,7 +18,7 @@ if [[ "$DISTRO" == rhel* ]] ; then
   sudo systemctl restart postgresql-12
   sudo systemctl status postgresql-12
 else
-  curl -s https://packagecloud.io/install/repositories/qxip/sipcapture/script.deb.sh | sudo bash
+  curl -s https://packagecloud.io/install/repositories/qxip/sipcapture/script.deb.sh?any=true | sudo bash
 
   # DH: TMP hack until homer releases debs for bookworm
   sudo sed -i 's/bookworm/bullseye/g' /etc/apt/sources.list.d/qxip_sipcapture.list
